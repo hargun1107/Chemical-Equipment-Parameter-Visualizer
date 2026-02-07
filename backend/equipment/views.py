@@ -1,13 +1,9 @@
-from django.shortcuts import render
-
 import pandas as pd
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Dataset
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
 def upload_csv(request):
     file = request.FILES.get('file')
 
@@ -29,7 +25,6 @@ def upload_csv(request):
         summary=summary
     )
 
-    # Keep only last 5 uploads
     if Dataset.objects.count() > 5:
         Dataset.objects.order_by('uploaded_at').first().delete()
 
@@ -37,7 +32,6 @@ def upload_csv(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def upload_history(request):
     datasets = Dataset.objects.order_by('-uploaded_at')[:5]
     return Response([
@@ -47,4 +41,3 @@ def upload_history(request):
             "summary": d.summary
         } for d in datasets
     ])
-
