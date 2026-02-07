@@ -52,8 +52,6 @@ Endpoint	Method	Description
 
 All endpoints require Basic Authentication
 
----
-
 🔐 Authentication
 
 Example credentials:
@@ -61,14 +59,11 @@ Example credentials:
 Username: admin
 Password: whatsupgang
 
-
 Used by:
 
 React web app 🌐
 PyQt desktop app 🖥️
 curl / Postman 🧪
-
----
 
 🧰 Technologies Used
 
@@ -81,15 +76,12 @@ curl / Postman 🧪
 🗄️ SQLite
 🎨 HTML / CSS / JavaScript
 
----
 
 📤 Outputs
 
 ✔ Summary statistics
 ✔ Interactive bar chart
 ✔ Downloadable PDF report
-
----
 
 👨‍💻 Author
 
