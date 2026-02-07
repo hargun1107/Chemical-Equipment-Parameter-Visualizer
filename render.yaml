@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: chemical-equipment-backend
+    env: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn backend.wsgi:application
+    rootDir: backend
