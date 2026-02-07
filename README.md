@@ -52,6 +52,7 @@ Endpoint	Method	Description
 
 All endpoints require Basic Authentication
 
+---
 
 🔐 Authentication
 
@@ -67,6 +68,7 @@ React web app 🌐
 PyQt desktop app 🖥️
 curl / Postman 🧪
 
+---
 
 🧰 Technologies Used
 
@@ -79,6 +81,7 @@ curl / Postman 🧪
 🗄️ SQLite
 🎨 HTML / CSS / JavaScript
 
+---
 
 📤 Outputs
 
@@ -86,6 +89,7 @@ curl / Postman 🧪
 ✔ Interactive bar chart
 ✔ Downloadable PDF report
 
+---
 
 👨‍💻 Author
 
