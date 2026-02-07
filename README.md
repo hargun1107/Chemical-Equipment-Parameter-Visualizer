@@ -1,90 +1,101 @@
-🧪 Chemical Equipment Parameter Visualizer
+# Chemical Equipment Parameter Visualizer
 
-A full-stack hybrid application to upload chemical equipment CSV data, analyze parameters, visualize insights 📊, and generate downloadable PDF reports 📄.
+A full-stack hybrid application to upload chemical equipment CSV data, analyze key parameters, visualize insights, and generate downloadable PDF reports.
 
-Built with Django + React + PyQt5, this project works as:
-- 🌐 Web Application  
-- 🖥️ Desktop Application  
-
----
-
-✨ Features
-
-✅ Upload CSV files containing chemical equipment data  
-📈 Automatic computation of:
-- Total equipment count
-- Average flow rate
-- Average pressure
-- Average temperature  
-
-📊 Interactive chart visualization (Equipment Type Distribution)  
-📄 Downloadable PDF summary report  
-🔐 Secure API access using Basic Authentication  
-🖥️ Works on Web + Desktop  
+This project includes:
+- A Django REST backend
+- A React web frontend
+- A PyQt5 desktop application
+- Basic Authentication
+- Chart visualizations
+- PDF report generation
 
 ---
 
-🗂️ Project Structure
+## Features
+
+- Upload CSV files containing chemical equipment data
+- Compute summary statistics:
+  - Total equipment count
+  - Average flow rate
+  - Average pressure
+  - Average temperature
+- Visualize equipment type distribution using charts
+- Download analyzed data as a PDF report
+- Secure API access using Basic Authentication
+- Use via Web App or Desktop App
+
+---
+
+## Project Structure
+
 Chemical-Equipment-Parameter-Visualizer/
 │
-├── backend/ # Django backend (API + PDF)
-││ ├── backend/
-││ ├── equipment/
-││ ├── manage.py
-││ └── requirements.txt
+├── backend/
+│ ├── backend/ # Django project settings
+│ ├── equipment/ # API app (upload, summary, PDF)
+│ ├── db.sqlite3
+│ ├── manage.py
+│ └── requirements.txt
 │
-├── web-frontend/ # React web app
-││ ├── src/App.js
-││ └── package.json
+├── web-frontend/
+│ ├── src/
+│ │ └── App.js # React frontend
+│ └── package.json
 │
-├── desktop_app/ # PyQt5 desktop app
-││ ├── app.py
-││ └── requirements.txt
+├── desktop_app/
+│ ├── app.py # PyQt5 desktop app
+│ └── requirements.txt
 │
 └── README.md
 
----
+## API Endpoints
+Endpoint	      Method	Description
+/api/upload/	   POST	   Upload CSV & get summary
+/api/report/pdf/	GET	   Download PDF report
 
-🔗 API Endpoints
-Endpoint	Method	Description
-/api/upload/	POST	Upload CSV & get summary
-/api/report/pdf/	GET	Download PDF report
+All API requests require Basic Authentication.
 
-All endpoints require Basic Authentication
+## Authentication
 
-🔐 Authentication
+The backend uses Basic Auth.
 
 Example credentials:
 
 Username: admin
 Password: whatsupgang
 
+
 Used by:
 
-React web app 🌐
-PyQt desktop app 🖥️
-curl / Postman 🧪
+React frontend
 
-🧰 Technologies Used
+PyQt desktop app
 
-🐍 Python
-🌐 Django & Django REST Framework
-⚛️ React.js
-📊 Chart.js
-🖥️ PyQt5
-📈 Matplotlib
-🗄️ SQLite
-🎨 HTML / CSS / JavaScript
+curl / Postman
 
 
-📤 Outputs
+## Technologies Used
 
-✔ Summary statistics
-✔ Interactive bar chart
-✔ Downloadable PDF report
+Python
+Django & Django REST Framework
+React.js
+Chart.js
+PyQt5
+Matplotlib
+SQLite
+HTML / CSS
+JavaScript
 
-👨‍💻 Author
+
+## Output Examples
+
+Interactive chart (equipment type distribution)
+Summary statistics
+Downloadable PDF report
+
+## Author
 
 Hargun Kohli
-🎓 Computer Science Engineering
-💻 Full-Stack Developer (Web + Desktop)
+Computer Science Engineering
+Full Stack Developer
