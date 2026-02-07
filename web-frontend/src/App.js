@@ -1,100 +1,117 @@
-import React, { useState } from "react";
-import axios from "axios";
-import { Bar } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import React, { useState, useRef, useEffect } from "react";
+import Chart from "chart.js/auto";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Tooltip,
-  Legend
-);
+const API_UPLOAD = "http://127.0.0.1:8000/api/upload/";
+const API_PDF = "http://127.0.0.1:8000/api/report/pdf/";
+
+const USERNAME = "admin";
+const PASSWORD = "whatsupgang";
+const authHeader = "Basic " + btoa(`${USERNAME}:${PASSWORD}`);
 
 function App() {
   const [file, setFile] = useState(null);
   const [summary, setSummary] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  const handleUpload = async () => {
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
+
+  const uploadCSV = async () => {
     if (!file) {
-      alert("Please select a CSV file");
+      alert("Select a CSV file");
       return;
     }
 
     const formData = new FormData();
     formData.append("file", file);
 
-    try {
-      setLoading(true);
-      const res = await axios.post(
-        "http://127.0.0.1:8000/api/upload/",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      setSummary(res.data);
-    } catch (error) {
-      alert("Upload failed. Check backend server.");
-    } finally {
-      setLoading(false);
+    const response = await fetch(API_UPLOAD, {
+      method: "POST",
+      headers: { Authorization: authHeader },
+      body: formData,
+    });
+
+    if (!response.ok) {
+      alert("Upload failed");
+      return;
     }
+
+    const data = await response.json();
+    setSummary(data);
   };
 
-  const chartData = summary
-    ? {
-        labels: Object.keys(summary.equipment_type_distribution),
+  useEffect(() => {
+    if (!summary || !canvasRef.current) return;
+
+    const distribution = summary.equipment_type_distribution;
+    if (!distribution) return;
+
+    if (chartRef.current) {
+      chartRef.current.destroy();
+    }
+
+    const ctx = canvasRef.current.getContext("2d");
+
+    chartRef.current = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: Object.keys(distribution),
         datasets: [
           {
             label: "Equipment Count",
-            data: Object.values(summary.equipment_type_distribution),
-            backgroundColor: "rgba(54, 162, 235, 0.7)",
+            data: Object.values(distribution),
+            backgroundColor: "rgba(75, 192, 192, 0.6)",
           },
         ],
-      }
-    : null;
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    });
+  }, [summary]);
+
+  const downloadPDF = async () => {
+    const response = await fetch(API_PDF, {
+      headers: { Authorization: authHeader },
+    });
+
+    if (!response.ok) {
+      alert("PDF download failed");
+      return;
+    }
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "chemical_equipment_report.pdf";
+    a.click();
+    window.URL.revokeObjectURL(url);
+  };
 
   return (
-    <div style={{ padding: "40px", fontFamily: "Arial" }}>
+    <div style={{ padding: "30px" }}>
       <h1>Chemical Equipment Parameter Visualizer</h1>
 
-      <input
-        type="file"
-        accept=".csv"
-        onChange={(e) => setFile(e.target.files[0])}
-      />
-      <br />
-      <br />
-
-      <button onClick={handleUpload} disabled={loading}>
-        {loading ? "Uploading..." : "Upload CSV"}
-      </button>
+      <input type="file" accept=".csv" onChange={(e) => setFile(e.target.files[0])} />
+      <br /><br />
+      <button onClick={uploadCSV}>Upload CSV</button>
 
       {summary && (
-        <div style={{ marginTop: "30px" }}>
+        <>
           <h2>Summary</h2>
-          <p><b>Total Count:</b> {summary.total_count}</p>
-          <p><b>Average Flowrate:</b> {summary.average_flowrate}</p>
-          <p><b>Average Pressure:</b> {summary.average_pressure}</p>
-          <p><b>Average Temperature:</b> {summary.average_temperature}</p>
-        </div>
-      )}
+          <p>Total Count: {summary.total_count}</p>
+          <p>Average Flowrate: {summary.average_flowrate}</p>
+          <p>Average Pressure: {summary.average_pressure}</p>
+          <p>Average Temperature: {summary.average_temperature}</p>
 
-      {chartData && (
-        <div style={{ width: "600px", marginTop: "40px" }}>
-          <h2>Equipment Type Distribution</h2>
-          <Bar data={chartData} />
-        </div>
+          <div style={{ width: "600px", height: "350px" }}>
+            <canvas ref={canvasRef}></canvas>
+          </div>
+
+          <br />
+          <button onClick={downloadPDF}>Download PDF</button>
+        </>
       )}
     </div>
   );

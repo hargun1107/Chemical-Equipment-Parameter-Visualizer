@@ -5,7 +5,6 @@ from django.http import FileResponse
 from .models import Dataset
 from .pdf_utils import generate_report_pdf
 
-# Temporary storage for last uploaded summary (for PDF generation)
 LAST_SUMMARY = None
 
 
@@ -31,17 +30,14 @@ def upload_csv(request):
         "equipment_type_distribution": df["Type"].value_counts().to_dict()
     }
 
-    # Save to database
     Dataset.objects.create(
         filename=file.name,
         summary=summary
     )
 
-    # Keep only last 5 datasets
     if Dataset.objects.count() > 5:
         Dataset.objects.order_by("uploaded_at").first().delete()
 
-    # Store summary for PDF generation
     LAST_SUMMARY = summary
 
     return Response(summary)
